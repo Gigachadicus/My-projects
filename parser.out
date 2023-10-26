@@ -1,33 +1,28 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
-Unused terminals:
-
-    IGNORE
-    TYPEDEF
-
 Grammar
 
 Rule 0     S' -> declaration
 Rule 1     declaration -> STRUCT ID LBRACE fields RBRACE SEMICOLON
-Rule 2     fields -> TYPE ID SEMICOLON fields
-Rule 3     fields -> TYPE ID SEMICOLON
+Rule 2     declaration -> TYPEDEF STRUCT ID LBRACE fields RBRACE ID SEMICOLON
+Rule 3     fields -> TYPE ID SEMICOLON fields
+Rule 4     fields -> TYPE ID SEMICOLON
 
 Terminals, with rules where they appear
 
-ID                   : 1 2 3
-IGNORE               : 
-LBRACE               : 1
-RBRACE               : 1
-SEMICOLON            : 1 2 3
-STRUCT               : 1
-TYPE                 : 2 3
-TYPEDEF              : 
+ID                   : 1 2 2 3 4
+LBRACE               : 1 2
+RBRACE               : 1 2
+SEMICOLON            : 1 2 3 4
+STRUCT               : 1 2
+TYPE                 : 3 4
+TYPEDEF              : 2
 error                : 
 
 Nonterminals, with rules where they appear
 
 declaration          : 0
-fields               : 1 2
+fields               : 1 2 3
 
 Parsing method: LALR
 
@@ -35,8 +30,10 @@ state 0
 
     (0) S' -> . declaration
     (1) declaration -> . STRUCT ID LBRACE fields RBRACE SEMICOLON
+    (2) declaration -> . TYPEDEF STRUCT ID LBRACE fields RBRACE ID SEMICOLON
 
     STRUCT          shift and go to state 2
+    TYPEDEF         shift and go to state 3
 
     declaration                    shift and go to state 1
 
@@ -50,78 +47,137 @@ state 2
 
     (1) declaration -> STRUCT . ID LBRACE fields RBRACE SEMICOLON
 
-    ID              shift and go to state 3
+    ID              shift and go to state 4
 
 
 state 3
 
-    (1) declaration -> STRUCT ID . LBRACE fields RBRACE SEMICOLON
+    (2) declaration -> TYPEDEF . STRUCT ID LBRACE fields RBRACE ID SEMICOLON
 
-    LBRACE          shift and go to state 4
+    STRUCT          shift and go to state 5
 
 
 state 4
 
-    (1) declaration -> STRUCT ID LBRACE . fields RBRACE SEMICOLON
-    (2) fields -> . TYPE ID SEMICOLON fields
-    (3) fields -> . TYPE ID SEMICOLON
+    (1) declaration -> STRUCT ID . LBRACE fields RBRACE SEMICOLON
 
-    TYPE            shift and go to state 6
+    LBRACE          shift and go to state 6
 
-    fields                         shift and go to state 5
 
 state 5
 
-    (1) declaration -> STRUCT ID LBRACE fields . RBRACE SEMICOLON
+    (2) declaration -> TYPEDEF STRUCT . ID LBRACE fields RBRACE ID SEMICOLON
 
-    RBRACE          shift and go to state 7
+    ID              shift and go to state 7
 
 
 state 6
 
-    (2) fields -> TYPE . ID SEMICOLON fields
-    (3) fields -> TYPE . ID SEMICOLON
+    (1) declaration -> STRUCT ID LBRACE . fields RBRACE SEMICOLON
+    (3) fields -> . TYPE ID SEMICOLON fields
+    (4) fields -> . TYPE ID SEMICOLON
 
-    ID              shift and go to state 8
+    TYPE            shift and go to state 9
 
+    fields                         shift and go to state 8
 
 state 7
 
-    (1) declaration -> STRUCT ID LBRACE fields RBRACE . SEMICOLON
+    (2) declaration -> TYPEDEF STRUCT ID . LBRACE fields RBRACE ID SEMICOLON
 
-    SEMICOLON       shift and go to state 9
+    LBRACE          shift and go to state 10
 
 
 state 8
 
-    (2) fields -> TYPE ID . SEMICOLON fields
-    (3) fields -> TYPE ID . SEMICOLON
+    (1) declaration -> STRUCT ID LBRACE fields . RBRACE SEMICOLON
 
-    SEMICOLON       shift and go to state 10
+    RBRACE          shift and go to state 11
 
 
 state 9
+
+    (3) fields -> TYPE . ID SEMICOLON fields
+    (4) fields -> TYPE . ID SEMICOLON
+
+    ID              shift and go to state 12
+
+
+state 10
+
+    (2) declaration -> TYPEDEF STRUCT ID LBRACE . fields RBRACE ID SEMICOLON
+    (3) fields -> . TYPE ID SEMICOLON fields
+    (4) fields -> . TYPE ID SEMICOLON
+
+    TYPE            shift and go to state 9
+
+    fields                         shift and go to state 13
+
+state 11
+
+    (1) declaration -> STRUCT ID LBRACE fields RBRACE . SEMICOLON
+
+    SEMICOLON       shift and go to state 14
+
+
+state 12
+
+    (3) fields -> TYPE ID . SEMICOLON fields
+    (4) fields -> TYPE ID . SEMICOLON
+
+    SEMICOLON       shift and go to state 15
+
+
+state 13
+
+    (2) declaration -> TYPEDEF STRUCT ID LBRACE fields . RBRACE ID SEMICOLON
+
+    RBRACE          shift and go to state 16
+
+
+state 14
 
     (1) declaration -> STRUCT ID LBRACE fields RBRACE SEMICOLON .
 
     $end            reduce using rule 1 (declaration -> STRUCT ID LBRACE fields RBRACE SEMICOLON .)
 
 
-state 10
+state 15
 
-    (2) fields -> TYPE ID SEMICOLON . fields
-    (3) fields -> TYPE ID SEMICOLON .
-    (2) fields -> . TYPE ID SEMICOLON fields
-    (3) fields -> . TYPE ID SEMICOLON
+    (3) fields -> TYPE ID SEMICOLON . fields
+    (4) fields -> TYPE ID SEMICOLON .
+    (3) fields -> . TYPE ID SEMICOLON fields
+    (4) fields -> . TYPE ID SEMICOLON
 
-    RBRACE          reduce using rule 3 (fields -> TYPE ID SEMICOLON .)
-    TYPE            shift and go to state 6
+    RBRACE          reduce using rule 4 (fields -> TYPE ID SEMICOLON .)
+    TYPE            shift and go to state 9
 
-    fields                         shift and go to state 11
+    fields                         shift and go to state 17
 
-state 11
+state 16
 
-    (2) fields -> TYPE ID SEMICOLON fields .
+    (2) declaration -> TYPEDEF STRUCT ID LBRACE fields RBRACE . ID SEMICOLON
 
-    RBRACE          reduce using rule 2 (fields -> TYPE ID SEMICOLON fields .)
+    ID              shift and go to state 18
+
+
+state 17
+
+    (3) fields -> TYPE ID SEMICOLON fields .
+
+    RBRACE          reduce using rule 3 (fields -> TYPE ID SEMICOLON fields .)
+
+
+state 18
+
+    (2) declaration -> TYPEDEF STRUCT ID LBRACE fields RBRACE ID . SEMICOLON
+
+    SEMICOLON       shift and go to state 19
+
+
+state 19
+
+    (2) declaration -> TYPEDEF STRUCT ID LBRACE fields RBRACE ID SEMICOLON .
+
+    $end            reduce using rule 2 (declaration -> TYPEDEF STRUCT ID LBRACE fields RBRACE ID SEMICOLON .)
 

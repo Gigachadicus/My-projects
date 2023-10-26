@@ -8,11 +8,10 @@ tokens = (
     'ID',
     'SEMICOLON',
     'LBRACE',
-    'RBRACE',
-    'IGNORE'
+    'RBRACE'
 )
 
-t_IGNORE = r' \t'
+t_ignore = '  \t'
 
 def t_TYPEDEF(t):
     r'typedef'
@@ -29,6 +28,7 @@ def t_TYPE(t):
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
     return t
+
 
 def t_INTEGER(t):
     r'\d+'
@@ -55,7 +55,8 @@ lexer = lex.lex()
 
 def p_declaration(p):
     '''
-    declaration : STRUCT ID LBRACE fields RBRACE SEMICOLON  
+    declaration : STRUCT ID LBRACE fields RBRACE SEMICOLON
+                | TYPEDEF STRUCT ID LBRACE fields RBRACE ID SEMICOLON
              
     '''
     print("Valid structure declaration")
@@ -79,5 +80,11 @@ lexer.input(input_text)
 for token in lexer:
     print(f"Token Type: {token.type}, Value: {token.value}")
 
-s = "struct ants{int from; int to;};"
-parser.parse(s)
+while True:
+    try:
+        s = input('C++ code here please: ')
+        if not s:
+            continue
+    except EOFError:
+        break
+    parser.parse(s)

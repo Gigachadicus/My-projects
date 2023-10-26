@@ -14,6 +14,9 @@ tokens = (
     'EQUAL'
 )
 
+
+t_ignore = '  \t'
+
 t_EQUAL = r'='
 
 def t_TYPE(t):
@@ -53,8 +56,6 @@ def t_RBRACE(t):
     r'\}'
     return t
 
-
-
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
@@ -67,6 +68,7 @@ def p_declaration(p):
              | TYPE ID DIMENSION EQUAL LBRACE NUMBERS RBRACE SEMICOLON
     '''
     print("Valid array declaration")
+    
 
 def p_NUMBERS(p):
     '''
@@ -74,12 +76,14 @@ def p_NUMBERS(p):
              | NUMBERS COMMA INTEGER
     '''
 
+
 def p_DIMENSION(p):
     '''
     DIMENSION : DIMENSION LBRACKET INTEGER RBRACKET
              | LBRACKET INTEGER RBRACKET
     '''
-
+    
+    
 def p_error(p):
     print("Syntax error in input!")
 
@@ -94,6 +98,12 @@ lexer.input(input_text)
 for token in lexer:
     print(f"Token Type: {token.type}, Value: {token.value}")
 
-s = "int ARR[3]={1,2,3};"
-parser.parse(s)
+while True:
+    try:
+        s = input('C++ code here please: ')
+        if not s:
+            continue
+    except EOFError:
+        break
+    parser.parse(s)
 

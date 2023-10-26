@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'ID IGNORE LBRACE RBRACE SEMICOLON STRUCT TYPE TYPEDEF\n    declaration : STRUCT ID LBRACE fields RBRACE SEMICOLON  \n             \n    \n    fields : TYPE ID SEMICOLON fields\n           | TYPE ID SEMICOLON\n    '
+_lr_signature = 'ID LBRACE RBRACE SEMICOLON STRUCT TYPE TYPEDEF\n    declaration : STRUCT ID LBRACE fields RBRACE SEMICOLON\n                | TYPEDEF STRUCT ID LBRACE fields RBRACE ID SEMICOLON\n             \n    \n    fields : TYPE ID SEMICOLON fields\n           | TYPE ID SEMICOLON\n    '
     
-_lr_action_items = {'STRUCT':([0,],[2,]),'$end':([1,9,],[0,-1,]),'ID':([2,6,],[3,8,]),'LBRACE':([3,],[4,]),'TYPE':([4,10,],[6,6,]),'RBRACE':([5,10,11,],[7,-3,-2,]),'SEMICOLON':([7,8,],[9,10,]),}
+_lr_action_items = {'STRUCT':([0,3,],[2,5,]),'TYPEDEF':([0,],[3,]),'$end':([1,14,19,],[0,-1,-2,]),'ID':([2,5,9,16,],[4,7,12,18,]),'LBRACE':([4,7,],[6,10,]),'TYPE':([6,10,15,],[9,9,9,]),'RBRACE':([8,13,15,17,],[11,16,-4,-3,]),'SEMICOLON':([11,12,18,],[14,15,19,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'declaration':([0,],[1,]),'fields':([4,10,],[5,11,]),}
+_lr_goto_items = {'declaration':([0,],[1,]),'fields':([6,10,15,],[8,13,17,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -28,6 +28,7 @@ del _lr_goto_items
 _lr_productions = [
   ("S' -> declaration","S'",1,None,None,None),
   ('declaration -> STRUCT ID LBRACE fields RBRACE SEMICOLON','declaration',6,'p_declaration','structuredecleration.py',58),
-  ('fields -> TYPE ID SEMICOLON fields','fields',4,'p_fields','structuredecleration.py',65),
-  ('fields -> TYPE ID SEMICOLON','fields',3,'p_fields','structuredecleration.py',66),
+  ('declaration -> TYPEDEF STRUCT ID LBRACE fields RBRACE ID SEMICOLON','declaration',8,'p_declaration','structuredecleration.py',59),
+  ('fields -> TYPE ID SEMICOLON fields','fields',4,'p_fields','structuredecleration.py',66),
+  ('fields -> TYPE ID SEMICOLON','fields',3,'p_fields','structuredecleration.py',67),
 ]
