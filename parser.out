@@ -7,20 +7,28 @@ Rule 1     declaration -> STRUCT ID LBRACE fields RBRACE SEMICOLON
 Rule 2     declaration -> TYPEDEF STRUCT ID LBRACE fields RBRACE ID SEMICOLON
 Rule 3     fields -> TYPE ID SEMICOLON fields
 Rule 4     fields -> TYPE ID SEMICOLON
+Rule 5     fields -> TYPE ID LBRACKET
+Rule 6     fields -> TYPE ID LBRACKET PARAMETERS RBRACKET SEMICOLON
+Rule 7     PARAMETERS -> TYPE ID COMMA PARAMETERS
+Rule 8     PARAMETERS -> TYPE ID
 
 Terminals, with rules where they appear
 
-ID                   : 1 2 2 3 4
+COMMA                : 7
+ID                   : 1 2 2 3 4 5 6 7 8
 LBRACE               : 1 2
+LBRACKET             : 5 6
 RBRACE               : 1 2
-SEMICOLON            : 1 2 3 4
+RBRACKET             : 6
+SEMICOLON            : 1 2 3 4 6
 STRUCT               : 1 2
-TYPE                 : 3 4
+TYPE                 : 3 4 5 6 7 8
 TYPEDEF              : 2
 error                : 
 
 Nonterminals, with rules where they appear
 
+PARAMETERS           : 6 7
 declaration          : 0
 fields               : 1 2 3
 
@@ -76,6 +84,8 @@ state 6
     (1) declaration -> STRUCT ID LBRACE . fields RBRACE SEMICOLON
     (3) fields -> . TYPE ID SEMICOLON fields
     (4) fields -> . TYPE ID SEMICOLON
+    (5) fields -> . TYPE ID LBRACKET
+    (6) fields -> . TYPE ID LBRACKET PARAMETERS RBRACKET SEMICOLON
 
     TYPE            shift and go to state 9
 
@@ -99,6 +109,8 @@ state 9
 
     (3) fields -> TYPE . ID SEMICOLON fields
     (4) fields -> TYPE . ID SEMICOLON
+    (5) fields -> TYPE . ID LBRACKET
+    (6) fields -> TYPE . ID LBRACKET PARAMETERS RBRACKET SEMICOLON
 
     ID              shift and go to state 12
 
@@ -108,6 +120,8 @@ state 10
     (2) declaration -> TYPEDEF STRUCT ID LBRACE . fields RBRACE ID SEMICOLON
     (3) fields -> . TYPE ID SEMICOLON fields
     (4) fields -> . TYPE ID SEMICOLON
+    (5) fields -> . TYPE ID LBRACKET
+    (6) fields -> . TYPE ID LBRACKET PARAMETERS RBRACKET SEMICOLON
 
     TYPE            shift and go to state 9
 
@@ -124,15 +138,18 @@ state 12
 
     (3) fields -> TYPE ID . SEMICOLON fields
     (4) fields -> TYPE ID . SEMICOLON
+    (5) fields -> TYPE ID . LBRACKET
+    (6) fields -> TYPE ID . LBRACKET PARAMETERS RBRACKET SEMICOLON
 
     SEMICOLON       shift and go to state 15
+    LBRACKET        shift and go to state 16
 
 
 state 13
 
     (2) declaration -> TYPEDEF STRUCT ID LBRACE fields . RBRACE ID SEMICOLON
 
-    RBRACE          shift and go to state 16
+    RBRACE          shift and go to state 17
 
 
 state 14
@@ -148,36 +165,105 @@ state 15
     (4) fields -> TYPE ID SEMICOLON .
     (3) fields -> . TYPE ID SEMICOLON fields
     (4) fields -> . TYPE ID SEMICOLON
+    (5) fields -> . TYPE ID LBRACKET
+    (6) fields -> . TYPE ID LBRACKET PARAMETERS RBRACKET SEMICOLON
 
     RBRACE          reduce using rule 4 (fields -> TYPE ID SEMICOLON .)
     TYPE            shift and go to state 9
 
-    fields                         shift and go to state 17
+    fields                         shift and go to state 18
 
 state 16
 
-    (2) declaration -> TYPEDEF STRUCT ID LBRACE fields RBRACE . ID SEMICOLON
+    (5) fields -> TYPE ID LBRACKET .
+    (6) fields -> TYPE ID LBRACKET . PARAMETERS RBRACKET SEMICOLON
+    (7) PARAMETERS -> . TYPE ID COMMA PARAMETERS
+    (8) PARAMETERS -> . TYPE ID
 
-    ID              shift and go to state 18
+    RBRACE          reduce using rule 5 (fields -> TYPE ID LBRACKET .)
+    TYPE            shift and go to state 19
 
+    PARAMETERS                     shift and go to state 20
 
 state 17
+
+    (2) declaration -> TYPEDEF STRUCT ID LBRACE fields RBRACE . ID SEMICOLON
+
+    ID              shift and go to state 21
+
+
+state 18
 
     (3) fields -> TYPE ID SEMICOLON fields .
 
     RBRACE          reduce using rule 3 (fields -> TYPE ID SEMICOLON fields .)
 
 
-state 18
+state 19
+
+    (7) PARAMETERS -> TYPE . ID COMMA PARAMETERS
+    (8) PARAMETERS -> TYPE . ID
+
+    ID              shift and go to state 22
+
+
+state 20
+
+    (6) fields -> TYPE ID LBRACKET PARAMETERS . RBRACKET SEMICOLON
+
+    RBRACKET        shift and go to state 23
+
+
+state 21
 
     (2) declaration -> TYPEDEF STRUCT ID LBRACE fields RBRACE ID . SEMICOLON
 
-    SEMICOLON       shift and go to state 19
+    SEMICOLON       shift and go to state 24
 
 
-state 19
+state 22
+
+    (7) PARAMETERS -> TYPE ID . COMMA PARAMETERS
+    (8) PARAMETERS -> TYPE ID .
+
+    COMMA           shift and go to state 25
+    RBRACKET        reduce using rule 8 (PARAMETERS -> TYPE ID .)
+
+
+state 23
+
+    (6) fields -> TYPE ID LBRACKET PARAMETERS RBRACKET . SEMICOLON
+
+    SEMICOLON       shift and go to state 26
+
+
+state 24
 
     (2) declaration -> TYPEDEF STRUCT ID LBRACE fields RBRACE ID SEMICOLON .
 
     $end            reduce using rule 2 (declaration -> TYPEDEF STRUCT ID LBRACE fields RBRACE ID SEMICOLON .)
+
+
+state 25
+
+    (7) PARAMETERS -> TYPE ID COMMA . PARAMETERS
+    (7) PARAMETERS -> . TYPE ID COMMA PARAMETERS
+    (8) PARAMETERS -> . TYPE ID
+
+    TYPE            shift and go to state 19
+
+    PARAMETERS                     shift and go to state 27
+
+state 26
+
+    (6) fields -> TYPE ID LBRACKET PARAMETERS RBRACKET SEMICOLON .
+
+    RBRACE          reduce using rule 6 (fields -> TYPE ID LBRACKET PARAMETERS RBRACKET SEMICOLON .)
+
+
+state 27
+
+    (7) PARAMETERS -> TYPE ID COMMA PARAMETERS .
+
+    RBRACKET        reduce using rule 7 (PARAMETERS -> TYPE ID COMMA PARAMETERS .)
 

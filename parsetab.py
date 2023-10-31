@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'ID LBRACE RBRACE SEMICOLON STRUCT TYPE TYPEDEF\n    declaration : STRUCT ID LBRACE fields RBRACE SEMICOLON\n                | TYPEDEF STRUCT ID LBRACE fields RBRACE ID SEMICOLON\n             \n    \n    fields : TYPE ID SEMICOLON fields\n           | TYPE ID SEMICOLON\n    '
+_lr_signature = 'COMMA ID LBRACE LBRACKET RBRACE RBRACKET SEMICOLON STRUCT TYPE TYPEDEF\n    declaration : STRUCT ID LBRACE fields RBRACE SEMICOLON\n                | TYPEDEF STRUCT ID LBRACE fields RBRACE ID SEMICOLON\n    \n    fields : TYPE ID SEMICOLON fields\n            | TYPE ID SEMICOLON\n            | TYPE ID LBRACKET \n            | TYPE ID LBRACKET PARAMETERS RBRACKET SEMICOLON\n    \n    PARAMETERS : TYPE ID COMMA PARAMETERS\n                | TYPE ID\n    '
     
-_lr_action_items = {'STRUCT':([0,3,],[2,5,]),'TYPEDEF':([0,],[3,]),'$end':([1,14,19,],[0,-1,-2,]),'ID':([2,5,9,16,],[4,7,12,18,]),'LBRACE':([4,7,],[6,10,]),'TYPE':([6,10,15,],[9,9,9,]),'RBRACE':([8,13,15,17,],[11,16,-4,-3,]),'SEMICOLON':([11,12,18,],[14,15,19,]),}
+_lr_action_items = {'STRUCT':([0,3,],[2,5,]),'TYPEDEF':([0,],[3,]),'$end':([1,14,24,],[0,-1,-2,]),'ID':([2,5,9,17,19,],[4,7,12,21,22,]),'LBRACE':([4,7,],[6,10,]),'TYPE':([6,10,15,16,25,],[9,9,9,19,19,]),'RBRACE':([8,13,15,16,18,26,],[11,17,-4,-5,-3,-6,]),'SEMICOLON':([11,12,21,23,],[14,15,24,26,]),'LBRACKET':([12,],[16,]),'RBRACKET':([20,22,27,],[23,-8,-7,]),'COMMA':([22,],[25,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'declaration':([0,],[1,]),'fields':([6,10,15,],[8,13,17,]),}
+_lr_goto_items = {'declaration':([0,],[1,]),'fields':([6,10,15,],[8,13,18,]),'PARAMETERS':([16,25,],[20,27,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,8 +27,12 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> declaration","S'",1,None,None,None),
-  ('declaration -> STRUCT ID LBRACE fields RBRACE SEMICOLON','declaration',6,'p_declaration','structuredecleration.py',58),
-  ('declaration -> TYPEDEF STRUCT ID LBRACE fields RBRACE ID SEMICOLON','declaration',8,'p_declaration','structuredecleration.py',59),
-  ('fields -> TYPE ID SEMICOLON fields','fields',4,'p_fields','structuredecleration.py',66),
-  ('fields -> TYPE ID SEMICOLON','fields',3,'p_fields','structuredecleration.py',67),
+  ('declaration -> STRUCT ID LBRACE fields RBRACE SEMICOLON','declaration',6,'p_declaration','structuredecleration.py',72),
+  ('declaration -> TYPEDEF STRUCT ID LBRACE fields RBRACE ID SEMICOLON','declaration',8,'p_declaration','structuredecleration.py',73),
+  ('fields -> TYPE ID SEMICOLON fields','fields',4,'p_fields','structuredecleration.py',79),
+  ('fields -> TYPE ID SEMICOLON','fields',3,'p_fields','structuredecleration.py',80),
+  ('fields -> TYPE ID LBRACKET','fields',3,'p_fields','structuredecleration.py',81),
+  ('fields -> TYPE ID LBRACKET PARAMETERS RBRACKET SEMICOLON','fields',6,'p_fields','structuredecleration.py',82),
+  ('PARAMETERS -> TYPE ID COMMA PARAMETERS','PARAMETERS',4,'p_PARAMETERS','structuredecleration.py',92),
+  ('PARAMETERS -> TYPE ID','PARAMETERS',2,'p_PARAMETERS','structuredecleration.py',93),
 ]

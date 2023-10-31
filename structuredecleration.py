@@ -8,7 +8,10 @@ tokens = (
     'ID',
     'SEMICOLON',
     'LBRACE',
-    'RBRACE'
+    'RBRACE',
+    'LBRACKET',
+    'RBRACKET',
+    'COMMA'
 )
 
 t_ignore = '  \t'
@@ -22,13 +25,12 @@ def t_STRUCT(t):
     return t
 
 def t_TYPE(t):
-    r'int|char|float|double'
+    r'int|char|float|double|void'
     return t
 
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
     return t
-
 
 def t_INTEGER(t):
     r'\d+'
@@ -47,6 +49,18 @@ def t_RBRACE(t):
     r'\}'
     return t
 
+def t_LBRACKET(t):
+    r'\('
+    return t
+
+def t_RBRACKET(t):
+    r'\)'
+    return t
+
+def t_COMMA(t):
+    r','
+    return t
+
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
@@ -57,18 +71,31 @@ def p_declaration(p):
     '''
     declaration : STRUCT ID LBRACE fields RBRACE SEMICOLON
                 | TYPEDEF STRUCT ID LBRACE fields RBRACE ID SEMICOLON
-             
     '''
     print("Valid structure declaration")
 
 def p_fields(p):
     '''
     fields : TYPE ID SEMICOLON fields
-           | TYPE ID SEMICOLON
+            | TYPE ID SEMICOLON
+            | TYPE ID LBRACKET 
+            | FUNCTION
+    '''
+
+def p_FUNCTION(p):
+    '''
+    FUNCTION : TYPE ID LBRACKET PARAMETERS RBRACKET SEMICOLON 
+    '''
+
+def p_PARAMETERS(p):
+    '''
+    PARAMETERS : TYPE ID COMMA PARAMETERS
+                | TYPE ID
     '''
 
 def p_error(p):
     print("Syntax error in input!")
+
 
 parser = yacc.yacc()
 

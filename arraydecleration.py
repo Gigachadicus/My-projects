@@ -41,11 +41,11 @@ def t_RBRACKET(t):
     return t
 
 def t_SEMICOLON(t):
-    r';'
+    r'\;'
     return t
 
 def t_COMMA(t):
-    r','
+    r'\,'
     return t
 
 def t_LBRACE(t):
@@ -65,22 +65,27 @@ lexer = lex.lex()
 def p_declaration(p):
     '''
     declaration : TYPE ID DIMENSION SEMICOLON  
-             | TYPE ID DIMENSION EQUAL LBRACE NUMBERS RBRACE SEMICOLON
+                | TYPE ID DIMENSION EQUAL ARRAY SEMICOLON
     '''
     print("Valid array declaration")
     
+def p_ARRAY(p):
+    '''
+    ARRAY : LBRACE NUMBERS RBRACE
+            | LBRACE NUMBERS COMMA ARRAY RBRACE
+    '''
 
 def p_NUMBERS(p):
     '''
     NUMBERS : INTEGER
-             | NUMBERS COMMA INTEGER
+            | NUMBERS COMMA INTEGER 
     '''
 
 
 def p_DIMENSION(p):
     '''
     DIMENSION : DIMENSION LBRACKET INTEGER RBRACKET
-             | LBRACKET INTEGER RBRACKET
+            | LBRACKET INTEGER RBRACKET
     '''
     
     
@@ -91,12 +96,13 @@ parser = yacc.yacc()
 lexer = lex.lex()
 
 # Test the lexer with example input
-input_text = "int x[3][5];"
+input_text = "int x[3][5] = {1, 2, 3};"
 lexer.input(input_text)
 
 # Print the tokens recognized by the lexer
 for token in lexer:
     print(f"Token Type: {token.type}, Value: {token.value}")
+
 
 while True:
     try:
