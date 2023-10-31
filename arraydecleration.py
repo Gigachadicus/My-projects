@@ -86,6 +86,7 @@ def p_DIMENSION(p):
     '''
     DIMENSION : DIMENSION LBRACKET INTEGER RBRACKET
             | LBRACKET INTEGER RBRACKET
+            | LBRACKET RBRACKET
     '''
     
     

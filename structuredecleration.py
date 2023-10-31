@@ -9,8 +9,8 @@ tokens = (
     'SEMICOLON',
     'LBRACE',
     'RBRACE',
-    'LBRACKET',
-    'RBRACKET',
+    'LBRACK',
+    'RBRACK',
     'COMMA'
 )
 
@@ -49,11 +49,11 @@ def t_RBRACE(t):
     r'\}'
     return t
 
-def t_LBRACKET(t):
+def t_LBRACK(t):
     r'\('
     return t
 
-def t_RBRACKET(t):
+def t_RBRACK(t):
     r'\)'
     return t
 
@@ -77,14 +77,14 @@ def p_declaration(p):
 def p_fields(p):
     '''
     fields : TYPE ID SEMICOLON fields
-            | TYPE ID SEMICOLON
-            | TYPE ID LBRACKET 
+            | TYPE ID SEMICOLON 
             | FUNCTION
     '''
 
 def p_FUNCTION(p):
     '''
-    FUNCTION : TYPE ID LBRACKET PARAMETERS RBRACKET SEMICOLON 
+    FUNCTION : TYPE ID LBRACK PARAMETERS RBRACK SEMICOLON
+                | TYPE ID LBRACK RBRACK SEMICOLON
     '''
 
 def p_PARAMETERS(p):
